@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Technical Translator UI</title>
+  <style>
+    body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 2rem; }
+    textarea { width: 100%; height: 200px; margin-bottom: 1rem; }
+    button { padding: 0.5rem 1rem; font-size: 1rem; }
+    pre { background: #f0f0f0; padding: 1rem; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>Technical Translator</h1>
+
+  <label for="sourceText">Enter text to translate:</label><br>
+  <textarea id="sourceText" placeholder="Paste technical content here..."></textarea>
+
+  <label for="sourceLang">Source Language:</label>
+  <select id="sourceLang">
+    <option value="EN">English</option>
+    <option value="FR">French</option>
+  </select>
+
+  <label for="targetLang">Target Language:</label>
+  <select id="targetLang">
+    <option value="FR">French</option>
+    <option value="EN">English</option>
+  </select>
+
+  <br><br>
+  <button onclick="translate()">Translate</button>
+
+  <h2>Translation (GPT-4.5)</h2>
+  <pre id="gpt"></pre>
+
+  <h2>Translation (DeepSeek)</h2>
+  <pre id="deepseek"></pre>
+
+  <h2>Translation (DeepL)</h2>
+  <pre id="deepl"></pre>
+
+  <h2>Notes & Justifications</h2>
+  <pre id="notes"></pre>
+
+  <script>
+    async function translate() {
+      const text = document.getElementById("sourceText").value;
+      const source_lang = document.getElementById("sourceLang").value;
+      const target_lang = document.getElementById("targetLang").value;
+
+      const response = await fetch("/api/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, source_lang, target_lang })
+      });
+
+      const data = await response.json();
+      document.getElementById("gpt").textContent = data.gpt || "";
+      document.getElementById("deepseek").textContent = data.deepseek || "";
+      document.getElementById("deepl").textContent = data.deepl || "";
+      document.getElementById("notes").textContent = data.notes || "";
+    }
+  </script>
+</body>
+</html>

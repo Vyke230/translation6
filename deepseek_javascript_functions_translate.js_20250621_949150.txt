@@ -1,0 +1,2 @@
+// Remove node-fetch (Netlify Functions include fetch natively)
+// Remove this line: import fetch from "node-fetch";
